@@ -21,7 +21,7 @@ public class Player : MonoBehaviour {
 
     private Rigidbody playerRigidbody;
     public Quaternion targetModelRotation;
-    private float knockBackSpeed = 50f;
+    public float knockBackSpeed = 100f;
     private float knockBackTimer;
 
     // Start is called before the first frame update
