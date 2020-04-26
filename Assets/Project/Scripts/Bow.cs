@@ -14,7 +14,7 @@ public class Bow : MonoBehaviour {
     public int Attack(int arrowAmount) {
         if (arrowAmount > 0) {
             GameObject arrow = Instantiate(arrowPrefab);
-            arrow.transform.position = transform.position + transform.forward;
+            arrow.transform.position = gameObject.transform.position + gameObject.transform.forward;
             arrowAmount--;
         }
 

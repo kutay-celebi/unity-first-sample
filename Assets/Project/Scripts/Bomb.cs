@@ -35,10 +35,12 @@ public class Bomb : MonoBehaviour {
             exploded = true;
 
             // get the objects which touched on the bomb.
-            Collider[] hitObjects = Physics.OverlapSphere(transform.position, radius);
+            Collider[] hitObjects = Physics.OverlapSphere(explosionModel.transform.position, radius);
 
             foreach (Collider collider in hitObjects) {
-                Debug.Log(collider.name + " was hit!");
+                if (collider.GetComponent<Enemy>() != null) {
+                    collider.GetComponent<Enemy>().Hit();
+                }
             }
 
             StartCoroutine(ExplodeBomb());

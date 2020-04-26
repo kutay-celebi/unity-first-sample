@@ -11,10 +11,12 @@ public class Sword : MonoBehaviour {
 
     private Quaternion targetRotation;
     private float cooldownTimer;
+    private Collider collider;
 
     // Start is called before the first frame update
     void Start() {
         targetRotation = Quaternion.Euler(0, 0, 0);
+        collider       = GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -32,7 +34,8 @@ public class Sword : MonoBehaviour {
             return;
         }
 
-        targetRotation = Quaternion.Euler(90, 0, 0);
+        collider.isTrigger = true;
+        targetRotation     = Quaternion.Euler(90, 0, 0);
 
         cooldownTimer = cooldownDuration;
 
@@ -42,7 +45,8 @@ public class Sword : MonoBehaviour {
     private IEnumerator CooldownWait() {
         isAttacking = true;
         yield return new WaitForSeconds(attackDuration);
-        isAttacking    = false;
-        targetRotation = Quaternion.Euler(0, 0, 0);
+        collider.isTrigger = false;
+        isAttacking        = false;
+        targetRotation     = Quaternion.Euler(0, 0, 0);
     }
 }
