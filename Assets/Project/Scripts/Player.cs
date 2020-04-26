@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using UnityEngine;
 
 public class Player : MonoBehaviour {
     public float health = 10;
@@ -139,11 +140,12 @@ public class Player : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if (other.GetComponent<EnemyBullet>() != null) {
             Hit((transform.position - other.transform.position).normalized);
+            Destroy(other.gameObject);
         }
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.GetComponent<Enemy>() != null || other.gameObject.GetComponent<EnemyBullet>() != null) {
+        if (other.gameObject.GetComponent<Enemy>() != null) {
             Hit((transform.position - other.transform.position).normalized);
         }
     }
