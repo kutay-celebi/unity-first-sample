@@ -291,5 +291,10 @@ Assets\Project\Scripts\Arrow.cs
 Assets\Project\Scripts\Bomb.cs
 Assets\Project\Scripts\Bow.cs
 Assets\Project\Scripts\Enemies\Enemy.cs
+Assets\Project\Scripts\Enemies\NewBehaviourScript.cs
+Assets\Project\Scripts\Enemies\ShootingEnemy.cs
+Assets\Project\Scripts\Enemies\SimpleEnemy.cs
+Assets\Project\Scripts\Enemies\StrongEnemy.cs
+Assets\Project\Scripts\PatrollingLogic.cs
 Assets\Project\Scripts\Player.cs
 Assets\Project\Scripts\Sword.cs
