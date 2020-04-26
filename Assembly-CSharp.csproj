@@ -58,6 +58,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Project\Scripts\Arrow.cs" />
+     <Compile Include="Assets\Project\Scripts\Bomb.cs" />
+     <Compile Include="Assets\Project\Scripts\Bow.cs" />
+     <Compile Include="Assets\Project\Scripts\Enemies\Enemy.cs" />
+     <Compile Include="Assets\Project\Scripts\Enemies\SimpleEnemy.cs" />
      <Compile Include="Assets\Project\Scripts\Player.cs" />
      <Compile Include="Assets\Project\Scripts\Sword.cs" />
  <Reference Include="Unity.Timeline.Editor">

@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 
 public class Player : MonoBehaviour {
-    [Header("Visuals")] public GameObject visuals;
+    [Header("Visuals")] public GameObject model;
     public float rotatingSpeed = 2f;
 
     [Header("Equipment")] public Sword sword;
+    public GameObject bombPrefab;
+    public Bow bow;
+    public float throwingSpeed = 10f;
+    public int bombAmount = 3;
+    public int arrowAmount = 15;
 
     [Header("Movement")] public float jumpingVelocity = 5f;
     public float movingVelocity = 5f;
@@ -29,7 +34,7 @@ public class Player : MonoBehaviour {
             canJump = true;
         }
 
-        visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, targetModelRotation, rotatingSpeed * Time.deltaTime);
+        model.transform.rotation = Quaternion.Lerp(model.transform.rotation, targetModelRotation, rotatingSpeed * Time.deltaTime);
 
         ProcessInput();
     }
@@ -45,9 +50,10 @@ public class Player : MonoBehaviour {
                 playerRigidbody.velocity.y,
                 movingVelocity
             );
+
             // visuals.transform.localEulerAngles = new Vector3(0,180,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,180,0), rotatingSpeed * Time.deltaTime );
-            targetModelRotation = Quaternion.Euler(0, 180, 0);
+            targetModelRotation = Quaternion.Euler(0, 0, 0);
         }
 
         if (Input.GetKey(KeyCode.S)) {
@@ -56,9 +62,10 @@ public class Player : MonoBehaviour {
                 playerRigidbody.velocity.y,
                 -movingVelocity
             );
+
             // visuals.transform.localEulerAngles = new Vector3(0,0,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,0,0), rotatingSpeed * Time.deltaTime );
-            targetModelRotation = Quaternion.Euler(0, 0, 0);
+            targetModelRotation = Quaternion.Euler(0, 180, 0);
         }
 
         if (Input.GetKey(KeyCode.A)) {
@@ -67,9 +74,10 @@ public class Player : MonoBehaviour {
                 playerRigidbody.velocity.y,
                 playerRigidbody.velocity.z
             );
+
             // visuals.transform.localEulerAngles = new Vector3(0,90,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,90,0), rotatingSpeed * Time.deltaTime );
-            targetModelRotation = Quaternion.Euler(0, 90, 0);
+            targetModelRotation = Quaternion.Euler(0, 270, 0);
         }
 
         if (Input.GetKey(KeyCode.D)) {
@@ -78,13 +86,15 @@ public class Player : MonoBehaviour {
                 playerRigidbody.velocity.y,
                 playerRigidbody.velocity.z
             );
+
             // visuals.transform.localEulerAngles = new Vector3(0,270,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,270,0), rotatingSpeed * Time.deltaTime );
-            targetModelRotation = Quaternion.Euler(0, 270, 0);
+            targetModelRotation = Quaternion.Euler(0, 90, 0);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump) {
             canJump = false;
+
             // rigidbody.AddForce(0, jumpingForce, 0);
             playerRigidbody.velocity = new Vector3(
                 playerRigidbody.velocity.x,
@@ -96,6 +106,25 @@ public class Player : MonoBehaviour {
         // check requipment interraction
         if (Input.GetMouseButtonDown(0)) {
             sword.Attack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.X)) {
+            ThrowBomb();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+            arrowAmount = bow.Attack(arrowAmount);
+        }
+    }
+
+    private void ThrowBomb() {
+        if (bombAmount > 0) {
+            GameObject bombObject = Instantiate(bombPrefab);
+            bombObject.transform.position = transform.position + model.transform.forward;
+
+            Vector3 throwingDirection = (model.transform.forward + Vector3.up).normalized;
+            bombObject.GetComponent<Rigidbody>().AddForce(throwingDirection * throwingSpeed);
+            bombAmount--;
         }
     }
 }
