@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
 public class Player : MonoBehaviour {
+    public float health = 10;
+
     [Header("Visuals")] public GameObject model;
     public float rotatingSpeed = 2f;
 
@@ -19,6 +21,8 @@ public class Player : MonoBehaviour {
 
     private Rigidbody playerRigidbody;
     public Quaternion targetModelRotation;
+    private float knockBackSpeed = 50f;
+    private float knockBackTimer;
 
     // Start is called before the first frame update
     void Start() {
@@ -36,7 +40,11 @@ public class Player : MonoBehaviour {
 
         model.transform.rotation = Quaternion.Lerp(model.transform.rotation, targetModelRotation, rotatingSpeed * Time.deltaTime);
 
-        ProcessInput();
+        if (knockBackTimer > 0) {
+            knockBackTimer -= Time.deltaTime;
+        } else {
+            ProcessInput();
+        }
     }
 
     void ProcessInput() {
@@ -46,10 +54,10 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.W)) {
             playerRigidbody.velocity = new Vector3(
-                playerRigidbody.velocity.x,
-                playerRigidbody.velocity.y,
-                movingVelocity
-            );
+                                                   playerRigidbody.velocity.x,
+                                                   playerRigidbody.velocity.y,
+                                                   movingVelocity
+                                                  );
 
             // visuals.transform.localEulerAngles = new Vector3(0,180,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,180,0), rotatingSpeed * Time.deltaTime );
@@ -58,10 +66,10 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.S)) {
             playerRigidbody.velocity = new Vector3(
-                playerRigidbody.velocity.x,
-                playerRigidbody.velocity.y,
-                -movingVelocity
-            );
+                                                   playerRigidbody.velocity.x,
+                                                   playerRigidbody.velocity.y,
+                                                   -movingVelocity
+                                                  );
 
             // visuals.transform.localEulerAngles = new Vector3(0,0,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,0,0), rotatingSpeed * Time.deltaTime );
@@ -70,10 +78,10 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.A)) {
             playerRigidbody.velocity = new Vector3(
-                -movingVelocity,
-                playerRigidbody.velocity.y,
-                playerRigidbody.velocity.z
-            );
+                                                   -movingVelocity,
+                                                   playerRigidbody.velocity.y,
+                                                   playerRigidbody.velocity.z
+                                                  );
 
             // visuals.transform.localEulerAngles = new Vector3(0,90,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,90,0), rotatingSpeed * Time.deltaTime );
@@ -82,10 +90,10 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.D)) {
             playerRigidbody.velocity = new Vector3(
-                movingVelocity,
-                playerRigidbody.velocity.y,
-                playerRigidbody.velocity.z
-            );
+                                                   movingVelocity,
+                                                   playerRigidbody.velocity.y,
+                                                   playerRigidbody.velocity.z
+                                                  );
 
             // visuals.transform.localEulerAngles = new Vector3(0,270,0);
             // visuals.transform.rotation = Quaternion.Lerp(visuals.transform.rotation, Quaternion.Euler(0,270,0), rotatingSpeed * Time.deltaTime );
@@ -97,10 +105,10 @@ public class Player : MonoBehaviour {
 
             // rigidbody.AddForce(0, jumpingForce, 0);
             playerRigidbody.velocity = new Vector3(
-                playerRigidbody.velocity.x,
-                jumpingVelocity,
-                playerRigidbody.velocity.z
-            );
+                                                   playerRigidbody.velocity.x,
+                                                   jumpingVelocity,
+                                                   playerRigidbody.velocity.z
+                                                  );
         }
 
         // check requipment interraction
@@ -125,6 +133,30 @@ public class Player : MonoBehaviour {
             Vector3 throwingDirection = (model.transform.forward + Vector3.up).normalized;
             bombObject.GetComponent<Rigidbody>().AddForce(throwingDirection * throwingSpeed);
             bombAmount--;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.GetComponent<EnemyBullet>() != null) {
+            Hit((transform.position - other.transform.position).normalized);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        if (other.gameObject.GetComponent<Enemy>() != null || other.gameObject.GetComponent<EnemyBullet>() != null) {
+            Hit((transform.position - other.transform.position).normalized);
+        }
+    }
+
+    private void Hit(Vector3 direction) {
+
+        Vector3 knockBackDirection = (direction + Vector3.up).normalized;
+        playerRigidbody.AddForce(knockBackDirection * knockBackSpeed);
+        knockBackTimer = 0.5f;
+        health--;
+
+        if (health <= 0) {
+            Destroy(gameObject);
         }
     }
 }
